@@ -27,10 +27,10 @@
   dotnet add package Newtonsoft.Json --version 13.0.1
 ```
 
-# To Do:
+## To Do:
 
-# Bug na api:
+#### Bug na api:
 
 > - Método update retorna erro
-# Melhoria para a api:
+#### Melhoria para a api:
 > - Tratar conculta de pais por id, atualmente consultando um id errado é retornado erro
