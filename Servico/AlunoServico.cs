@@ -1,6 +1,7 @@
-using System;
 using System.Net.Http;
 using System.Threading.Tasks;
+using api_desafio21dias.Models;
+using Newtonsoft.Json;
 
 namespace api_desafio21dias.Servicos
 {
@@ -8,22 +9,27 @@ namespace api_desafio21dias.Servicos
     {
         public static async Task<bool> ValidarUsuario(int id)
         {
-            //Para não dar erro de certificado
-            HttpClientHandler clientHandler = new HttpClientHandler();
-            clientHandler.ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => { return true; };
-
-            using (var http = new HttpClient(clientHandler))
+            using (var http = new HttpClient())
             {
-                try
+                using (var response = await http.GetAsync($"{Program.AlunoApi}alunos/{id}"))
                 {
-                    using (var response = await http.GetAsync($"{Program.AlunosApi}/alunos/{id}"))
-                    {
-                        return response.IsSuccessStatusCode;
-                    }
+                    return response.IsSuccessStatusCode;
                 }
-                catch (Exception ex)
+            }
+        }
+
+        public static async Task<Aluno> BuscaPorId(int id)
+        {
+            using (var http = new HttpClient())
+            {
+                using (var response = await http.GetAsync($"{Program.AlunoApi}alunos/{id}"))
                 {
-                    throw ex;
+                    if(response.IsSuccessStatusCode)
+                    {
+                        string responseBody = await response.Content.ReadAsStringAsync();
+                        return JsonConvert.DeserializeObject<Aluno>(responseBody);
+                    }
+                    return new Aluno();
                 }
             }
         }
